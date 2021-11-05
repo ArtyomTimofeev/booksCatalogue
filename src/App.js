@@ -1,14 +1,19 @@
 import React, { useState, useEffect } from 'react';
 import { db } from './firebase-config';
-import { collection, getDocs } from 'firebase/firestore/lite';
-import Book from './Components/BookItem';
+import { collection, getDocs, orderBy } from 'firebase/firestore/lite';
+import Header from './Components/Header/Header';
+import Content from './Components/Content/Content';
+import { query } from 'firebase/database';
 
 const App = () => {
   const [books, setBooks] = useState([]);
-  const booksCol = collection(db, 'books');
   useEffect(() => {
     const getBooks = async () => {
-      const booksSnapshot = await getDocs(booksCol);
+      const queryForBooks = query(
+        collection(db, 'books'),
+        orderBy('year', 'desc')
+      );
+      const booksSnapshot = await getDocs(queryForBooks);
       const booksList = booksSnapshot.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -17,13 +22,11 @@ const App = () => {
     };
     getBooks();
   }, []);
+
   return (
-    <div>
-      {books.map((book) => (
-        <div key={book.id}>
-          <Book book={book} />
-        </div>
-      ))}
+    <div style={{ backgroundColor: 'rgb(227 227 227)', height: '100vh' }}>
+      <Header />
+      <Content books={books} />
     </div>
   );
 };
