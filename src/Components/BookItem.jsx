@@ -20,11 +20,11 @@ const BookItem = ({ book }) => {
             image="https://woman-gu.ru/wp-content/uploads/2020/03/glow.jpg"
           />
           <CardContent>
-            <Typography gutterBottom variant="h6" component="div">
+            <Typography gutterBottom component="div">
               {book.name}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              <b>Autor: </b> {book.autor || '—'}
+              <b>Author: </b> {book.author || '—'}
               <br />
               <b>Year: </b> {book.year || '—'}
               <br />
