@@ -1,20 +1,36 @@
 import { Container, Typography } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import BooksOfYearCol from './BooksOfYearCol';
 import RecommendedBookBlock from './RecommendedBookBlock';
+import _ from 'underscore';
 
-const Content = ({ books, sortByYearsBooksArr }) => {
+const Content = ({ books }) => {
+  const [sortByYearsBooks, setSortByYearsBooks] = useState([]);
+
+  useEffect(() => {
+    let sortByYearsBooksArr = [];
+    let year = null;
+    for (let i = 0; i < books.length; i++) {
+      if (year !== books[i].year) {
+        let booksOfYearArr = _.where(books, { year: books[i].year });
+        sortByYearsBooksArr[i] = booksOfYearArr;
+        year = books[i].year;
+      }
+    }
+    setSortByYearsBooks(sortByYearsBooksArr);
+  }, [books]);
+
   return (
     <Container maxWidth="xl" sx={{ pt: 4, pb: 4 }}>
       <RecommendedBookBlock books={books} />
-      {sortByYearsBooksArr.map((booksOfYearArr) => {
-        booksOfYearArr.sort((a, b) => (a.name > b.name ? 1 : -1));
+      {sortByYearsBooks.map((booksOfYear, index) => {
+        booksOfYear.sort((a, b) => (a.name > b.name ? 1 : -1));
         return (
-          <div key={booksOfYearArr.index}>
+          <div key={index}>
             <Typography gutterBottom variant="h4">
-              {booksOfYearArr[0].year || 'Without year'}
+              {booksOfYear[0].year || 'Without year'}
             </Typography>
-            <BooksOfYearCol booksOfYear={booksOfYearArr} />
+            <BooksOfYearCol booksOfYear={booksOfYear} />
           </div>
         );
       })}

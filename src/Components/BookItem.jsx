@@ -1,41 +1,50 @@
 import React from 'react';
 
 import {
-  CardActionArea,
   Typography,
   CardMedia,
   CardContent,
   Card,
-  Grid,
+  CardActionArea,
 } from '@mui/material';
 
 const BookItem = ({ book }) => {
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3} xl={2.4}>
+    <Card>
       <CardActionArea>
-        <Card sx={{ maxHeight: 375, minHeight: 375 }}>
-          <CardMedia
-            component="img"
-            height="160"
-            image="https://woman-gu.ru/wp-content/uploads/2020/03/glow.jpg"
-          />
-          <CardContent>
-            <Typography gutterBottom component="div">
-              {book.name}
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              <b>Author: </b> {book.author || '—'}
-              <br />
-              <b>Year: </b> {book.year || '—'}
-              <br />
-              <b>Rating: </b> {book.rating || '—'}
-              <br />
-              <b>ISBN: </b> {book.ISBN || '—'}
-            </Typography>
-          </CardContent>
-        </Card>
+        <CardMedia
+          sx={{ objectFit: 'contain', pt: 1, pb: 1 }}
+          component="img"
+          height="140"
+          image={
+            book.imgUrl ||
+            'https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-question-mark-book-pattern-illustration-image_1411141.jpg'
+          }
+        />
+        <CardContent
+          sx={{
+            background: 'khaki',
+            minHeight: 140,
+            maxHeight: 140,
+            padding: 1,
+            overflow: 'auto',
+          }}
+        >
+          <Typography gutterBottom component="div">
+            <b>{book.name}</b>
+          </Typography>
+          <Typography variant="body2" color="text.secondary">
+            <b>Author: </b> {book.author || '—'}
+            <br />
+            <b>Year: </b> {book.year || '—'}
+            <br />
+            <b>Rating: </b> {book.rating || '—'}
+            <br />
+            <b>ISBN: </b> {book.ISBN || '—'}
+          </Typography>
+        </CardContent>
       </CardActionArea>
-    </Grid>
+    </Card>
   );
 };
 export default BookItem;

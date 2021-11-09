@@ -4,10 +4,10 @@ import { collection, getDocs, orderBy } from 'firebase/firestore/lite';
 import Header from './Components/Header';
 import Content from './Components/Content';
 import { query } from 'firebase/database';
-import _ from 'underscore';
 
 const App = () => {
   const [books, setBooks] = useState([]);
+
   useEffect(() => {
     const getBooks = async () => {
       const queryForBooks = query(
@@ -24,20 +24,10 @@ const App = () => {
     getBooks();
   }, []);
 
-  let sortByYearsBooksArr = [];
-  let year = null;
-  for (let i = 0; i < books.length; i++) {
-    if (year !== books[i].year) {
-      let booksOfYearArr = _.where(books, { year: books[i].year });
-      sortByYearsBooksArr[i] = booksOfYearArr;
-      year = books[i].year;
-    }
-  }
-
   return (
-    <div style={{ backgroundColor: 'rgb(227 227 227)' }}>
+    <div style={{ backgroundColor: 'rgb(232 232 232)' }}>
       <Header />
-      <Content books={books} sortByYearsBooksArr={sortByYearsBooksArr} />
+      <Content books={books} />
     </div>
   );
 };
