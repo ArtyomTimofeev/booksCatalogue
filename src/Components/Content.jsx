@@ -21,7 +21,7 @@ const Content = ({ books }) => {
   }, [books]);
 
   return (
-    <Container maxWidth="xl" sx={{ pt: 4, pb: 4 }}>
+    <Container maxWidth="xl" sx={{ pt: 10, pb: 4 }}>
       <RecommendedBookBlock books={books} />
       {sortByYearsBooks.map((booksOfYear, index) => {
         booksOfYear.sort((a, b) => (a.name > b.name ? 1 : -1));

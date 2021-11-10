@@ -1,14 +1,26 @@
-import React from 'react';
-
+import React, { useContext } from 'react';
 import {
   Typography,
   CardMedia,
   CardContent,
   Card,
   CardActionArea,
+  CardActions,
+  Button,
 } from '@mui/material';
+import Context from '../context';
+import API from '../api';
 
 const BookItem = ({ book }) => {
+  const { setBooks } = useContext(Context);
+
+  const deleteCard = async (id) => {
+    await API.deleteCard(id);
+    API.getBooks().then((response) => {
+      setBooks(response);
+    });
+  };
+
   return (
     <Card>
       <CardActionArea>
@@ -24,8 +36,7 @@ const BookItem = ({ book }) => {
         <CardContent
           sx={{
             background: 'khaki',
-            minHeight: 140,
-            maxHeight: 140,
+            height: 140,
             padding: 1,
             overflow: 'auto',
           }}
@@ -44,6 +55,16 @@ const BookItem = ({ book }) => {
           </Typography>
         </CardContent>
       </CardActionArea>
+      <CardActions disableSpacing>
+        <Button
+          onClick={() => deleteCard(book.id)}
+          sx={{ flexGrow: 1 }}
+          size="small"
+          color="error"
+        >
+          Delete
+        </Button>
+      </CardActions>
     </Card>
   );
 };

@@ -17,7 +17,7 @@ const RecommendedBookBlock = ({ books }) => {
         booksWithRating.map((item) => item.rating)
       );
       const booksWithMaxRating = _.where(booksWithRating, {
-        rating: `${maxRating}`,
+        rating: maxRating,
       });
       const bookWithMaxRating =
         booksWithMaxRating[
