@@ -1,8 +1,7 @@
-import { Typography } from '@mui/material';
+import { Typography, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import BookItem from './BookItem';
 import _ from 'underscore';
-import { Grid } from '@mui/material';
 
 const RecommendedBookBlock = ({ books }) => {
   const [bookWithMaxRating, setBookWithMaxRating] = useState([]);

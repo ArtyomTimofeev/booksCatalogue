@@ -1,7 +1,13 @@
 import { db } from './firebase-config';
-import { collection, getDocs, orderBy } from 'firebase/firestore/lite';
+import {
+  collection,
+  getDocs,
+  orderBy,
+  doc,
+  deleteDoc,
+  addDoc,
+} from 'firebase/firestore/lite';
 import { query } from 'firebase/database';
-import { doc, deleteDoc } from 'firebase/firestore/lite';
 
 const API = {
   async getBooks() {
@@ -16,9 +22,14 @@ const API = {
     }));
     return booksList;
   },
-  async deleteCard(id) {
+  async deleteBook(id) {
     const bookDoc = doc(db, 'books', id);
     await deleteDoc(bookDoc);
+  },
+  async createBook(values) {
+    if (values.year === '') values.year = 0;
+    if (values.rating === '') values.rating = 0;
+    await addDoc(collection(db, 'books'), values);
   },
 };
 export default API;

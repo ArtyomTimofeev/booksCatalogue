@@ -4,9 +4,12 @@ import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import Icon from '@mui/material/Icon';
-const Header = () => {
+const Header = ({ setOpenForm }) => {
+  const handleClickOpen = () => {
+    setOpenForm(true);
+  };
   return (
-    <AppBar position="fixed">
+    <AppBar position="fixed" color="primary">
       <Toolbar variant="dense">
         <Typography
           sx={{ flexGrow: 1 }}
@@ -16,7 +19,7 @@ const Header = () => {
         >
           Books Catalogue
         </Typography>
-        <IconButton>
+        <IconButton onClick={handleClickOpen}>
           <Icon sx={{ color: 'white' }}>add</Icon>
         </IconButton>
       </Toolbar>
