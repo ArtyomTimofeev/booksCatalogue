@@ -9,14 +9,15 @@ import {
 } from '@mui/material';
 import Context from '../context';
 import API from '../api';
+import BookImg from '../assets/images/book.png';
 
-const BookItem = ({ book }) => {
-  const { setBooks } = useContext(Context);
+const BookCard = ({ book }) => {
+  const { setAllBooks } = useContext(Context);
 
   const deleteCard = async (id) => {
     await API.deleteBook(id);
     API.getBooks().then((response) => {
-      setBooks(response);
+      setAllBooks(response);
     });
   };
 
@@ -26,10 +27,7 @@ const BookItem = ({ book }) => {
         sx={{ objectFit: 'contain', pt: 1, pb: 1 }}
         component="img"
         height="140"
-        image={
-          book.imgUrl ||
-          'https://png.pngtree.com/element_our/20190602/ourlarge/pngtree-question-mark-book-pattern-illustration-image_1411141.jpg'
-        }
+        image={book.imgUrl || BookImg}
       />
       <CardContent
         sx={{
@@ -44,15 +42,17 @@ const BookItem = ({ book }) => {
         </Typography>
         <Typography variant="body2" color="text.secondary">
           <b>Author: </b> {book.author || '—'}
-          <br />
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <b>Year: </b> {book.year || '—'}
-          <br />
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <b>Rating: </b> {book.rating || 0}
-          <br />
+        </Typography>
+        <Typography variant="body2" color="text.secondary">
           <b>ISBN: </b> {book.ISBN || '—'}
         </Typography>
       </CardContent>
-
       <CardActions disableSpacing>
         <Button
           onClick={() => deleteCard(book.id)}
@@ -66,4 +66,4 @@ const BookItem = ({ book }) => {
     </Card>
   );
 };
-export default BookItem;
+export default BookCard;

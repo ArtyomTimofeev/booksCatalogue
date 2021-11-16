@@ -1,40 +1,63 @@
-import { Container, Typography } from '@mui/material';
+import { Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import BooksOfYearCol from './BooksOfYearCol';
+import GroupOfBooks from './GroupOfBooks';
 import RecommendedBookBlock from './RecommendedBookBlock';
+import GroupingSelect from './GroupingSelect';
+import Preloader from './Preloader';
 import _ from 'underscore';
 
-const Content = ({ books }) => {
-  const [sortByYearsBooks, setSortByYearsBooks] = useState([]);
+const Content = ({ allBooks }) => {
+  const [groupingByTypeBooks, setGroupingByTypeBooks] = useState(allBooks);
+  const [groupingType, setGroupingType] = useState('year');
 
   useEffect(() => {
-    let sortByYearsBooksArr = [];
-    let year = null;
-    for (let i = 0; i < books.length; i++) {
-      if (year !== books[i].year) {
-        let booksOfYearArr = _.where(books, { year: books[i].year });
-        sortByYearsBooksArr[i] = booksOfYearArr;
-        year = books[i].year;
+    let groupCards = (groupingType) => {
+      if (groupingType === 'author') {
+        allBooks.sort((a, b) => (a[groupingType] > b[groupingType] ? 1 : -1));
+      } else {
+        allBooks.sort((a, b) => (a[groupingType] < b[groupingType] ? 1 : -1));
       }
-    }
-    setSortByYearsBooks(sortByYearsBooksArr);
-  }, [books]);
+      let groupingByTypeBooksArr = [];
+      let count = null;
+
+      for (let i = 0; i < allBooks.length; i++) {
+        if (count !== allBooks[i][groupingType]) {
+          let groupOfBooksArr = _.where(allBooks, {
+            [groupingType]: allBooks[i][groupingType],
+          });
+          groupingByTypeBooksArr.push(groupOfBooksArr);
+          count = allBooks[i][groupingType];
+        }
+      }
+      setGroupingByTypeBooks(groupingByTypeBooksArr);
+    };
+    groupCards(groupingType);
+  }, [allBooks, groupingType]);
 
   return (
-    <Container maxWidth="xl" sx={{ pt: 10, pb: 4 }}>
-      <RecommendedBookBlock books={books} />
-      {sortByYearsBooks.map((booksOfYear, index) => {
-        booksOfYear.sort((a, b) => (a.name > b.name ? 1 : -1));
-        return (
-          <div key={index}>
-            <Typography gutterBottom variant="h4">
-              {booksOfYear[0].year || 'Without year'}
-            </Typography>
-            <BooksOfYearCol booksOfYear={booksOfYear} />
-          </div>
-        );
-      })}
-    </Container>
+    <main style={{ backgroundColor: 'rgb(232 232 232)' }}>
+      <Container maxWidth="xl" sx={{ pt: 10, pb: 4 }}>
+        <GroupingSelect
+          groupingType={groupingType}
+          setGroupingType={setGroupingType}
+        />
+        <RecommendedBookBlock allBooks={allBooks} />
+        {groupingByTypeBooks.length === 0 ? (
+          <Preloader />
+        ) : (
+          groupingByTypeBooks.map((groupOfBooks, index) => {
+            groupOfBooks.sort((a, b) => (a.name > b.name ? 1 : -1));
+            return (
+              <GroupOfBooks
+                key={index}
+                groupingType={groupingType}
+                groupOfBooks={groupOfBooks}
+              />
+            );
+          })
+        )}
+      </Container>
+    </main>
   );
 };
 

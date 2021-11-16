@@ -1,9 +1,6 @@
 import React from 'react';
-import AppBar from '@mui/material/AppBar';
-import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
-import IconButton from '@mui/material/IconButton';
-import Icon from '@mui/material/Icon';
+import { AppBar, Toolbar, Typography, IconButton } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 const Header = ({ setOpenForm }) => {
   const handleClickOpen = () => {
     setOpenForm(true);
@@ -20,7 +17,7 @@ const Header = ({ setOpenForm }) => {
           Books Catalogue
         </Typography>
         <IconButton onClick={handleClickOpen}>
-          <Icon sx={{ color: 'white' }}>add</Icon>
+          <AddIcon sx={{ color: 'white' }} />
         </IconButton>
       </Toolbar>
     </AppBar>

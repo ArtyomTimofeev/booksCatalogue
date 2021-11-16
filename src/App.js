@@ -6,24 +6,23 @@ import API from './api';
 import Form from './Components/Form';
 
 const App = () => {
-  const [books, setBooks] = useState([]);
+  const [allBooks, setAllBooks] = useState([]);
   const [openForm, setOpenForm] = useState(false);
+
   useEffect(() => {
-    API.getBooks().then((response) => setBooks(response));
+    API.getBooks().then((response) => setAllBooks(response));
   }, []);
 
   return (
-    <div style={{ backgroundColor: 'rgb(232 232 232)' }}>
-      <Context.Provider value={{ setBooks }}>
-        <Header setOpenForm={setOpenForm} />
-        <Content books={books} />
-        <Form
-          setBooks={setBooks}
-          openForm={openForm}
-          setOpenForm={setOpenForm}
-        />
-      </Context.Provider>
-    </div>
+    <Context.Provider value={{ setAllBooks }}>
+      <Header setOpenForm={setOpenForm} />
+      <Content allBooks={allBooks} setAllBooks={setAllBooks} />
+      <Form
+        setAllBooks={setAllBooks}
+        openForm={openForm}
+        setOpenForm={setOpenForm}
+      />
+    </Context.Provider>
   );
 };
 

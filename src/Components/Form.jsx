@@ -1,8 +1,8 @@
-import * as React from 'react';
-import Button from '@mui/material/Button';
-import TextField from '@mui/material/TextField';
+import React from 'react';
 import {
   Dialog,
+  TextField,
+  Button,
   DialogActions,
   DialogContent,
   DialogContentText,
@@ -12,7 +12,7 @@ import { Formik } from 'formik';
 import * as yup from 'yup';
 import API from '../api';
 
-const Form = ({ openForm, setOpenForm, setBooks }) => {
+const Form = ({ openForm, setOpenForm, setAllBooks }) => {
   const validationSchema = yup.object().shape({
     name: yup.string().required().max(100),
     author: yup.string().required(),
@@ -32,146 +32,153 @@ const Form = ({ openForm, setOpenForm, setBooks }) => {
       ),
   });
 
-  const handleClose = (touched, errors) => {
+  const handleClose = (values, errors) => {
     setOpenForm(false);
+    for (let value in values) {
+      values[value] = '';
+    }
   };
   return (
-    <div>
-      <Formik
-        initialValues={{
-          name: '',
-          author: '',
-          year: '',
-          rating: '',
-          ISBN: '',
-          imgUrl: '',
-        }}
-        validateOnBlur
-        onSubmit={async (values) => {
-          await API.createBook(values);
-          API.getBooks().then((response) => {
-            setBooks(response);
-          });
-          handleClose();
-          for (var value in values) {
-            values[value] = '';
-          }
-        }}
-        validationSchema={validationSchema}
-      >
-        {({
-          values,
-          errors,
-          touched,
-          handleChange,
-          handleBlur,
-          isValid,
-          handleSubmit,
-          dirty,
-        }) => (
-          <Dialog open={openForm} onClose={handleClose}>
-            <DialogTitle>Adding a book to catalogue</DialogTitle>
-            <DialogContent>
-              <DialogContentText>
-                If you want to add a book, please enter these fields.
-              </DialogContentText>
-              <TextField
-                autoFocus
-                margin="dense"
-                id="name"
-                label="Book title"
-                type="text"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.name}
-                name={'name'}
-                error={Boolean(touched.name && errors.name)}
-                helperText={errors.name}
-              />
-              <TextField
-                margin="dense"
-                id="author"
-                label="List of authors"
-                type="text"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.author}
-                name={'author'}
-                error={Boolean(touched.author && errors.author)}
-                helperText={errors.author}
-              />
-              <TextField
-                margin="dense"
-                id="year"
-                label="Publication year"
-                type="number"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.year}
-                name={'year'}
-                error={Boolean(touched.year && errors.year)}
-                helperText={errors.year}
-              />
-              <TextField
-                margin="dense"
-                id="rating"
-                label="Rating"
-                type="number"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.rating}
-                name={'rating'}
-                error={Boolean(touched.rating && errors.rating)}
-                helperText={errors.rating}
-              />
-              <TextField
-                margin="dense"
-                id="ISBN"
-                label="ISBN"
-                type="text"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.ISBN}
-                name={'ISBN'}
-                error={Boolean(touched.ISBN && errors.ISBN)}
-                helperText={errors.ISBN}
-              />
-              <TextField
-                margin="dense"
-                id="imgUrl"
-                label="Image URL"
-                type="text"
-                fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                value={values.imgUrl}
-                name={'imgUrl'}
-                error={Boolean(touched.imgUrl && errors.imgUrl)}
-                helperText={errors.imgUrl}
-              />
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={() => handleClose(errors, touched)}>
-                Cancel
-              </Button>
-              <Button
-                disabled={!isValid || !dirty}
-                type="submit"
-                color="secondary"
-                onClick={handleSubmit}
-              >
-                Add
-              </Button>
-            </DialogActions>
-          </Dialog>
-        )}
-      </Formik>
-    </div>
+    <Formik
+      initialValues={{
+        name: '',
+        author: '',
+        year: '',
+        rating: '',
+        ISBN: '',
+        imgUrl: '',
+      }}
+      validateOnBlur
+      onSubmit={async (values, touched, errors) => {
+        await API.createBook(values);
+        API.getBooks().then((response) => {
+          setAllBooks(response);
+        });
+        handleClose(values, touched, errors);
+      }}
+      validationSchema={validationSchema}
+    >
+      {({
+        values,
+        errors,
+        touched,
+        handleChange,
+        handleBlur,
+        isValid,
+        handleSubmit,
+        dirty,
+      }) => (
+        <Dialog
+          open={openForm}
+          onClose={() => {
+            handleClose(values, touched, errors);
+          }}
+        >
+          <DialogTitle>Adding a book to catalogue</DialogTitle>
+          <DialogContent>
+            <DialogContentText>
+              If you want to add a book, please enter these fields.
+            </DialogContentText>
+            <TextField
+              autoFocus
+              margin="dense"
+              id="name"
+              label="Book title"
+              type="text"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.name}
+              name={'name'}
+              error={Boolean(touched.name && errors.name)}
+              helperText={errors.name}
+            />
+            <TextField
+              margin="dense"
+              id="author"
+              label="List of authors"
+              type="text"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.author}
+              name={'author'}
+              error={Boolean(touched.author && errors.author)}
+              helperText={errors.author}
+            />
+            <TextField
+              margin="dense"
+              id="year"
+              label="Publication year"
+              type="number"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.year}
+              name={'year'}
+              error={Boolean(touched.year && errors.year)}
+              helperText={errors.year}
+            />
+            <TextField
+              margin="dense"
+              id="rating"
+              label="Rating"
+              type="number"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.rating}
+              name={'rating'}
+              error={Boolean(touched.rating && errors.rating)}
+              helperText={errors.rating}
+            />
+            <TextField
+              margin="dense"
+              id="ISBN"
+              label="ISBN"
+              type="text"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.ISBN}
+              name={'ISBN'}
+              error={Boolean(touched.ISBN && errors.ISBN)}
+              helperText={errors.ISBN}
+            />
+            <TextField
+              margin="dense"
+              id="imgUrl"
+              label="Image URL"
+              type="text"
+              fullWidth
+              onChange={handleChange}
+              onBlur={handleBlur}
+              value={values.imgUrl}
+              name={'imgUrl'}
+              error={Boolean(touched.imgUrl && errors.imgUrl)}
+              helperText={errors.imgUrl}
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                handleClose(values, touched, errors);
+              }}
+            >
+              Cancel
+            </Button>
+            <Button
+              disabled={!isValid || !dirty}
+              type="submit"
+              color="secondary"
+              onClick={() => handleSubmit(values, touched, errors)}
+            >
+              Add
+            </Button>
+          </DialogActions>
+        </Dialog>
+      )}
+    </Formik>
   );
 };
 

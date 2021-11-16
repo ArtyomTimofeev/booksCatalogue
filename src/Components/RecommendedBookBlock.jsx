@@ -1,13 +1,14 @@
 import { Typography, Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import BookItem from './BookItem';
+import BookCard from './BookCard';
 import _ from 'underscore';
 
-const RecommendedBookBlock = ({ books }) => {
+const RecommendedBookBlock = ({ allBooks }) => {
   const [bookWithMaxRating, setBookWithMaxRating] = useState([]);
+
   useEffect(() => {
     let currentYear = new Date().getFullYear();
-    const booksWithRating = books.filter(
+    const booksWithRating = allBooks.filter(
       (book) => book.year <= currentYear - 3 && book.rating
     );
     if (booksWithRating.length > 0) {
@@ -24,18 +25,19 @@ const RecommendedBookBlock = ({ books }) => {
         ];
       setBookWithMaxRating(bookWithMaxRating);
     }
-  }, [books]);
+  }, [allBooks]);
+
   return (
-    <>
+    <section>
       <Typography gutterBottom variant="h4">
         Recommended Book
       </Typography>
-      <Grid container spacing={2} sx={{ mb: 6 }}>
+      <Grid container columnSpacing={2} sx={{ mb: 6 }}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <BookItem book={bookWithMaxRating} />
+          <BookCard book={bookWithMaxRating} />
         </Grid>
       </Grid>
-    </>
+    </section>
   );
 };
 export default RecommendedBookBlock;
