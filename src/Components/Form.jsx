@@ -8,14 +8,14 @@ import {
   DialogContentText,
   DialogTitle,
 } from '@mui/material';
-import { Formik } from 'formik';
+import { useFormik } from 'formik';
 import * as yup from 'yup';
 import API from '../api';
 
 const Form = ({ openForm, setOpenForm, setAllBooks }) => {
   const validationSchema = yup.object().shape({
-    name: yup.string().required().max(100),
-    author: yup.string().required(),
+    name: yup.string().required('required field').max(100),
+    author: yup.string().required('required field'),
     year: yup.number().min(1800).max(new Date().getFullYear()).integer(),
     rating: yup.number().min(0).max(10).integer(),
     ISBN: yup
@@ -32,153 +32,126 @@ const Form = ({ openForm, setOpenForm, setAllBooks }) => {
       ),
   });
 
-  const handleClose = (values, errors) => {
+  const formik = useFormik({
+    initialValues: {
+      name: '',
+      author: '',
+      year: '',
+      rating: '',
+      ISBN: '',
+      imgUrl: '',
+    },
+    validationSchema,
+    onSubmit: async () => {
+      await API.createBook(formik.values);
+      API.getBooks().then((response) => {
+        setAllBooks(response);
+      });
+      handleClose();
+    },
+  });
+
+  const handleClose = () => {
     setOpenForm(false);
-    for (let value in values) {
-      values[value] = '';
-    }
+    formik.resetForm();
   };
+
   return (
-    <Formik
-      initialValues={{
-        name: '',
-        author: '',
-        year: '',
-        rating: '',
-        ISBN: '',
-        imgUrl: '',
-      }}
-      validateOnBlur
-      onSubmit={async (values, touched, errors) => {
-        await API.createBook(values);
-        API.getBooks().then((response) => {
-          setAllBooks(response);
-        });
-        handleClose(values, touched, errors);
-      }}
-      validationSchema={validationSchema}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleChange,
-        handleBlur,
-        isValid,
-        handleSubmit,
-        dirty,
-      }) => (
-        <Dialog
-          open={openForm}
-          onClose={() => {
-            handleClose(values, touched, errors);
-          }}
-        >
-          <DialogTitle>Adding a book to catalogue</DialogTitle>
-          <DialogContent>
-            <DialogContentText>
-              If you want to add a book, please enter these fields.
-            </DialogContentText>
-            <TextField
-              autoFocus
-              margin="dense"
-              id="name"
-              label="Book title"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.name}
-              name={'name'}
-              error={Boolean(touched.name && errors.name)}
-              helperText={errors.name}
-            />
-            <TextField
-              margin="dense"
-              id="author"
-              label="List of authors"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.author}
-              name={'author'}
-              error={Boolean(touched.author && errors.author)}
-              helperText={errors.author}
-            />
-            <TextField
-              margin="dense"
-              id="year"
-              label="Publication year"
-              type="number"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.year}
-              name={'year'}
-              error={Boolean(touched.year && errors.year)}
-              helperText={errors.year}
-            />
-            <TextField
-              margin="dense"
-              id="rating"
-              label="Rating"
-              type="number"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.rating}
-              name={'rating'}
-              error={Boolean(touched.rating && errors.rating)}
-              helperText={errors.rating}
-            />
-            <TextField
-              margin="dense"
-              id="ISBN"
-              label="ISBN"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.ISBN}
-              name={'ISBN'}
-              error={Boolean(touched.ISBN && errors.ISBN)}
-              helperText={errors.ISBN}
-            />
-            <TextField
-              margin="dense"
-              id="imgUrl"
-              label="Image URL"
-              type="text"
-              fullWidth
-              onChange={handleChange}
-              onBlur={handleBlur}
-              value={values.imgUrl}
-              name={'imgUrl'}
-              error={Boolean(touched.imgUrl && errors.imgUrl)}
-              helperText={errors.imgUrl}
-            />
-          </DialogContent>
-          <DialogActions>
-            <Button
-              onClick={() => {
-                handleClose(values, touched, errors);
-              }}
-            >
-              Cancel
-            </Button>
-            <Button
-              disabled={!isValid || !dirty}
-              type="submit"
-              color="secondary"
-              onClick={() => handleSubmit(values, touched, errors)}
-            >
-              Add
-            </Button>
-          </DialogActions>
-        </Dialog>
-      )}
-    </Formik>
+    <Dialog open={openForm} onClose={handleClose}>
+      <DialogTitle>Adding a book to catalogue</DialogTitle>
+      <DialogContent>
+        <DialogContentText>
+          If you want to add a book, please fill these fields.
+        </DialogContentText>
+        <TextField
+          autoFocus
+          margin="dense"
+          id="name"
+          name="name"
+          label="Book title"
+          type="text"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.name}
+          error={formik.touched.name && Boolean(formik.errors.name)}
+          helperText={formik.touched.name && formik.errors.name}
+          required
+        />
+        <TextField
+          margin="dense"
+          id="author"
+          name="author"
+          label="List of authors"
+          type="text"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.author}
+          error={formik.touched.author && Boolean(formik.errors.author)}
+          helperText={formik.touched.author && formik.errors.author}
+          required
+        />
+        <TextField
+          margin="dense"
+          id="year"
+          name="year"
+          label="Publication year"
+          type="number"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.year}
+          error={Boolean(formik.errors.year)}
+          helperText={formik.errors.year}
+        />
+        <TextField
+          margin="dense"
+          id="rating"
+          name="rating"
+          label="Rating"
+          type="number"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.rating}
+          error={Boolean(formik.errors.rating)}
+          helperText={formik.errors.rating}
+        />
+        <TextField
+          margin="dense"
+          id="ISBN"
+          name="ISBN"
+          label="ISBN"
+          type="text"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.ISBN}
+          error={Boolean(formik.errors.ISBN)}
+          helperText={formik.errors.ISBN}
+        />
+        <TextField
+          margin="dense"
+          id="imgUrl"
+          name="imgUrl"
+          label="Image URL"
+          type="text"
+          fullWidth
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          value={formik.values.imgUrl}
+          error={Boolean(formik.errors.imgUrl)}
+          helperText={formik.errors.imgUrl}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose}>Cancel</Button>
+        <Button color="secondary" onClick={formik.handleSubmit}>
+          Add
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
 

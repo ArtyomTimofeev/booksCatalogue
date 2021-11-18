@@ -34,7 +34,7 @@ const RecommendedBookBlock = ({ allBooks }) => {
       </Typography>
       <Grid container columnSpacing={2} sx={{ mb: 6 }}>
         <Grid item xs={12} sm={6} md={4} lg={3}>
-          <BookCard book={bookWithMaxRating} />
+          <BookCard book={bookWithMaxRating} nonEditableBookCard={true} />
         </Grid>
       </Grid>
     </section>
