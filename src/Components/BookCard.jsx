@@ -89,128 +89,113 @@ const BookCard = ({ book, nonEditableBookCard }) => {
         }}
       >
         {!editMode ? (
-          <Typography gutterBottom component="div">
-            <b>{book.name}</b>
-          </Typography>
+          <>
+            <Typography gutterBottom component="div">
+              <b>{book.name}</b>
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <b>Author: </b> {book.author || '—'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <b>Year: </b> {book.year || '—'}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <b>Rating: </b> {book.rating || 0}
+            </Typography>
+            <Typography variant="body2" color="text.secondary">
+              <b>ISBN: </b> {book.ISBN || '—'}
+            </Typography>
+          </>
         ) : (
-          <TextField
-            size="small"
-            autoFocus
-            margin="dense"
-            id="name"
-            name="name"
-            label="Book title"
-            type="text"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.name}
-            error={formik.touched.name && Boolean(formik.errors.name)}
-            helperText={formik.touched.name && formik.errors.name}
-            required
-          />
-        )}
-
-        {!editMode ? (
-          <Typography variant="body2" color="text.secondary">
-            <b>Author: </b> {book.author || '—'}
-          </Typography>
-        ) : (
-          <TextField
-            size="small"
-            margin="dense"
-            id="author"
-            name="author"
-            label="List of authors"
-            type="text"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.author}
-            error={formik.touched.author && Boolean(formik.errors.author)}
-            helperText={formik.touched.author && formik.errors.author}
-            required
-          />
-        )}
-
-        {!editMode ? (
-          <Typography variant="body2" color="text.secondary">
-            <b>Year: </b> {book.year || '—'}
-          </Typography>
-        ) : (
-          <TextField
-            size="small"
-            margin="dense"
-            id="year"
-            name="year"
-            label="Publication year"
-            type="number"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.year}
-            error={Boolean(formik.errors.year)}
-            helperText={formik.errors.year}
-          />
-        )}
-
-        {!editMode ? (
-          <Typography variant="body2" color="text.secondary">
-            <b>Rating: </b> {book.rating || 0}
-          </Typography>
-        ) : (
-          <TextField
-            size="small"
-            margin="dense"
-            id="rating"
-            name="rating"
-            label="Rating"
-            type="number"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.rating}
-            error={Boolean(formik.errors.rating)}
-            helperText={formik.errors.rating}
-          />
-        )}
-
-        {!editMode ? (
-          <Typography variant="body2" color="text.secondary">
-            <b>ISBN: </b> {book.ISBN || '—'}
-          </Typography>
-        ) : (
-          <TextField
-            size="small"
-            margin="dense"
-            id="ISBN"
-            name="ISBN"
-            label="ISBN"
-            type="text"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.ISBN}
-            error={Boolean(formik.errors.ISBN)}
-            helperText={formik.errors.ISBN}
-          />
-        )}
-
-        {editMode && (
-          <TextField
-            size="small"
-            margin="dense"
-            id="imgUrl"
-            name="imgUrl"
-            label="Image URL"
-            type="text"
-            fullWidth
-            onChange={formik.handleChange}
-            onBlur={formik.handleBlur}
-            value={formik.values.imgUrl}
-            error={Boolean(formik.errors.imgUrl)}
-            helperText={formik.errors.imgUrl}
-          />
+          <>
+            <TextField
+              size="small"
+              autoFocus
+              margin="dense"
+              id="name"
+              name="name"
+              label="Book title"
+              type="text"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.name}
+              error={formik.touched.name && Boolean(formik.errors.name)}
+              helperText={formik.touched.name && formik.errors.name}
+              required
+            />
+            <TextField
+              size="small"
+              margin="dense"
+              id="author"
+              name="author"
+              label="List of authors"
+              type="text"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.author}
+              error={formik.touched.author && Boolean(formik.errors.author)}
+              helperText={formik.touched.author && formik.errors.author}
+              required
+            />
+            <TextField
+              size="small"
+              margin="dense"
+              id="year"
+              name="year"
+              label="Publication year"
+              type="number"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.year}
+              error={Boolean(formik.errors.year)}
+              helperText={formik.errors.year}
+            />
+            <TextField
+              size="small"
+              margin="dense"
+              id="rating"
+              name="rating"
+              label="Rating"
+              type="number"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.rating}
+              error={Boolean(formik.errors.rating)}
+              helperText={formik.errors.rating}
+            />
+            <TextField
+              size="small"
+              margin="dense"
+              id="ISBN"
+              name="ISBN"
+              label="ISBN"
+              type="text"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.ISBN}
+              error={Boolean(formik.errors.ISBN)}
+              helperText={formik.errors.ISBN}
+            />
+            <TextField
+              size="small"
+              margin="dense"
+              id="imgUrl"
+              name="imgUrl"
+              label="Image URL"
+              type="text"
+              fullWidth
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              value={formik.values.imgUrl}
+              error={Boolean(formik.errors.imgUrl)}
+              helperText={formik.errors.imgUrl}
+            />
+          </>
         )}
       </CardContent>
       <CardActions disableSpacing>
